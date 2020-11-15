@@ -1,13 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import  viewsets
 
-from profiles_api import serializers
+from .serializers import HelloSerializer
 
-
+#  USING APIVIEW
 class HelloApiView(APIView):
     """ Test API View """
-    serializer_class = serializers.HelloSerializer
+    serializer_class = HelloSerializer
 
     def get(self, request, format=None):
         """ Returns a list of APIView features"""
@@ -45,3 +46,52 @@ class HelloApiView(APIView):
         """ Handles the Deleting of an object """
 
         return Response({ 'message': 'Simple DELETE'})
+
+
+# USING VIEWSETS
+class HelloViewSet(viewsets.ViewSet):
+    """ Tests API Viewset """
+    serializer_class = HelloSerializer
+
+    def list(self, request):
+        """ Returns a Hello Message """
+        a_viewset = [
+        'Uses actions (list, create, retrieve, update, partial_updates)',
+        'Automatically maps to URLs using Routers',
+        'Provides more functionality with less codes'
+        ]
+        return Response({'message':'Hello ViewSet', 'a_viewset': a_viewset })
+
+
+    def create(self, request):
+        """ Creates a new Hello Message """
+        serializer_class = HelloSerializer
+        serializer = self.serializer_class(data=request.data)
+
+        # Validate the serializer data
+        if serializer.is_valid():
+            name = serializer.validated_data.get('name')
+            message = f'Hello {name}. This is ViewSet'
+            return Response({message})
+
+        return Response( serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self,request, pk=None):
+        """ Gets single Object by its ID """
+
+        return Response({'message': 'This is a simple GET request from ViewSet'})
+
+    def update(slef, request, pk=None):
+        """Handles Updating a single Object """
+
+        return Response({'message':'This is a simple PUT request from ViewSet'})
+
+    def partial_update(self, request, pk=None):
+        """ Handles Updating part of an object """
+
+        return Response({'message': 'This is a simple PATCH request from ViewSet'})
+
+    def delete(self, request, pk=None):
+        """ Destroys object data in db """
+
+        return Response({'message': 'This is a simple DELETE request from ViewSet'})
