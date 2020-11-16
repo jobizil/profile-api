@@ -136,3 +136,6 @@ dmypy.json
 eb-package.zip
 static/
 .vscode/
+
+Pipfile
+Pipfile.lock
