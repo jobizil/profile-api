@@ -4,11 +4,11 @@ from rest_framework import status, viewsets, filters
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
-
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .serializers import HelloSerializer, UserProfileSerializer, ProfileFeedItemSerializer
 from .models import  UserProfile, ProfileFeedItem
-from .permissions import UpdateOwnProfile
+from .permissions import UpdateOwnProfile, UpdateOwnStatus
 
 #  USING APIVIEW
 class HelloApiView(APIView):
@@ -125,6 +125,8 @@ class ProfileFeedViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     serializer_class = ProfileFeedItemSerializer
     queryset = ProfileFeedItem.objects.all()
+    permission_classes = ( UpdateOwnStatus, IsAuthenticatedOrReadOnly)
+
 
     def perform_create(self, serializer):
         """ Sets user profile to the logged in user """

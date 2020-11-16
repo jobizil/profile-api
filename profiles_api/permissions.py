@@ -9,5 +9,15 @@ class UpdateOwnProfile(BasePermission):
         #  Safe Methods are methods that do not require or make changes to an object eg GET requests
         if request.method in SAFE_METHODS:
             return True
-        else:
-            return obj.id == request.user.id
+
+        return obj.id == request.user.id
+
+
+class UpdateOwnStatus(BasePermission):
+    """ Allows user to update personal status"""
+
+    def has_object_permission(self, request, view, obj):
+        """ Checks if user is trying to update their own status """
+        if request.method in SAFE_METHODS:
+            return True
+        return obj.id == request.user.id
