@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin,  BaseUserManager
 
 
-
 class UserProfileManager(BaseUserManager):
     """  Manager for user profiles """
+
     def create_user(self, email, name, password=None):
         """ Creates a new user Profile """
         if not email:
@@ -14,7 +14,7 @@ class UserProfileManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, name=name)
 
-        user.set_password(password)
+        user.set_password(password)         # Hashes password 
         user.save(using=self._db)
 
         return user
