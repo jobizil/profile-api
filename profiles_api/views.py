@@ -6,8 +6,8 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 
 
-from .serializers import HelloSerializer, UserProfileSerializer
-from .models import  UserProfile
+from .serializers import HelloSerializer, UserProfileSerializer, ProfileFeedItemSerializer
+from .models import  UserProfile, ProfileFeedItem
 from .permissions import UpdateOwnProfile
 
 #  USING APIVIEW
@@ -117,3 +117,15 @@ class UserLoginApiView(ObtainAuthToken):
     """ Handles creating user authentication tokens """
 
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+
+
+# Profile Feed ViewSet
+class ProfileFeedViewSet(viewsets.ModelViewSet):
+    """ Handles creating, Updating & Reading profile feed Items """
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = ProfileFeedItemSerializer
+    queryset = ProfileFeedItem.objects.all()
+
+    def perform_create(self, serializer):
+        """ Sets user profile to the logged in user """
+        serializer.save(user_profile=self.request.user)
