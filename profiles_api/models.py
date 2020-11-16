@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin,  BaseUserManager
+from django.conf import settings
 
 
 class UserProfileManager(BaseUserManager):
@@ -14,7 +15,7 @@ class UserProfileManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, name=name)
 
-        user.set_password(password)         # Hashes password 
+        user.set_password(password)         # Hashes password
         user.save(using=self._db)
 
         return user
@@ -49,3 +50,17 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class ProfileFeedItem(models.Model):
+    """ Stores User Profile status Update into db """
+    user_profile = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete = models.CASCADE,
+    )
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """ Return model as a String """
+        return self.status_text
