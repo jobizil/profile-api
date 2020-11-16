@@ -4,7 +4,7 @@ from rest_framework import status, viewsets, filters
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import HelloSerializer, UserProfileSerializer, ProfileFeedItemSerializer
 from .models import  UserProfile, ProfileFeedItem
@@ -125,7 +125,7 @@ class ProfileFeedViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     serializer_class = ProfileFeedItemSerializer
     queryset = ProfileFeedItem.objects.all()
-    permission_classes = ( UpdateOwnStatus, IsAuthenticatedOrReadOnly)
+    permission_classes = ( UpdateOwnStatus, IsAuthenticated)
 
 
     def perform_create(self, serializer):
